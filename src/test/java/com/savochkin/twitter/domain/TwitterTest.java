@@ -1,19 +1,31 @@
 package com.savochkin.twitter.domain;
 
 import com.savochkin.twitter.domain.Twitter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 public class TwitterTest {
+
+    @Autowired
+    Twitter twitter;
+
+    @AfterEach
+    public void afterEach() {
+        twitter.reset();
+    }
 
     @Test
     public void testPostTweet() {
-        Twitter twitter = new Twitter();
         twitter.postTweet(1, 5); // User 1 posts a new tweet (id = 5).
         List<Integer> feed1 = twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5]. return [5]
         assertEquals(1, feed1.size());
@@ -22,7 +34,6 @@ public class TwitterTest {
 
     @Test
     public void testFollowUserAndCheckPostsAdded() {
-        Twitter twitter = new Twitter();
         twitter.follow(1, 2);    // User 1 follows user 2.
         twitter.postTweet(2, 6); // User 2 posts a new tweet (id = 6).
         List<Integer> feed = twitter.getNewsFeed(1);  // User 1's news feed should return a list with 2 tweet ids -> [6, 5]. Tweet id 6 should precede tweet id 5 because it is posted after tweet id 5.
@@ -32,7 +43,6 @@ public class TwitterTest {
 
     @Test
     public void testFollowUserAndCheckPostsAddedInRightOrder() {
-        Twitter twitter = new Twitter();
         // timeline:
         // user 1:    5     7
         // user 2:       6
@@ -50,7 +60,6 @@ public class TwitterTest {
 
     @Test
     public void testUnfollowUserAndCheckPostsRemoved() {
-        Twitter twitter = new Twitter();
         twitter.follow(1, 2);    // User 1 follows user 2.
         twitter.postTweet(2, 6); // User 2 posts a new tweet (id = 6).
         List<Integer> feed = twitter.getNewsFeed(1);  // User 1's news feed should return a list with 2 tweet ids -> [6, 5]. Tweet id 6 should precede tweet id 5 because it is posted after tweet id 5.
@@ -69,7 +78,6 @@ public class TwitterTest {
         // user 2:       6
         // user 1 follows 2 => 5 6 7
         // user 1 unfollows 2 => 5 7
-        Twitter twitter = new Twitter();
         twitter.postTweet(1, 5);
         twitter.postTweet(2, 6);
         twitter.postTweet(1, 7);
@@ -83,7 +91,6 @@ public class TwitterTest {
 
         @Test
     public void test01() {
-        Twitter twitter = new Twitter();
         twitter.postTweet(1, 5); // User 1 posts a new tweet (id = 5).
         List<Integer> feed1 = twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5]. return [5]
         assertEquals(1, feed1.size());
@@ -136,8 +143,6 @@ public class TwitterTest {
         int T = 1000; // number of tweets per writer
 
         long start = System.currentTimeMillis();
-
-        Twitter twitter = new Twitter();
 
         System.out.println("Setting up readers...");
         IntStream.range(0, R).forEach(r -> {

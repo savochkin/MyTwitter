@@ -1,0 +1,13 @@
+package com.savochkin.twitter;
+
+import com.savochkin.twitter.domain.Twitter;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class TwitterApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Twitter.class, args);
+    }
+
+}

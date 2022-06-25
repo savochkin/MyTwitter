@@ -1,7 +1,6 @@
 package com.savochkin.twitter.domain;
 
-import com.savochkin.twitter.data.TweetHashMapRepository;
-import com.savochkin.twitter.data.UserHashMapRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -9,11 +8,14 @@ public class Twitter {
 
     private int timestamp = 0;
     public static final int MAX_TWEETS = 10;
-    // We are storing own tweet of the user. This is the optimization - just so that 
-    private FeedRepository ownTweetsRepository = new TweetHashMapRepository(); // todo
-    private FeedRepository feedsRepository = new TweetHashMapRepository();
-    private UserRepository userRepository = new UserHashMapRepository();
-    public Twitter() {
+    // We are storing own tweet of the user. This is the optimization - just so that
+    private FeedRepository ownTweetsRepository; //  = new TweetHashMapRepository(); // todo
+    private FeedRepository feedsRepository; // = new TweetHashMapRepository();
+    private UserRepository userRepository; // = new UserHashMapRepository();
+    public Twitter(FeedRepository ownTweetsRepository, FeedRepository feedsRepository, UserRepository userRepository) {
+        this.ownTweetsRepository = ownTweetsRepository;
+        this.feedsRepository = feedsRepository;
+        this.userRepository = userRepository;
     }
 
     public void postTweet(int userId, int tweetId) { // O(F)
@@ -39,5 +41,11 @@ public class Twitter {
     public void unfollow(int followerId, int followeeId) {// O(1) O(1) since our feed is constrained
         userRepository.getFollowers(followeeId).remove(Integer.valueOf(followerId));
         feedsRepository.getFeed(followerId).removeAll(ownTweetsRepository.getFeed(followeeId));
+    }
+
+    public void reset() {
+        userRepository.reset();
+        ownTweetsRepository.reset();
+        feedsRepository.reset();
     }
 }

@@ -1,4 +1,4 @@
-package com.savochkin.twitter.data;
+package com.savochkin.twitter.persistence.hashmap;
 
 import com.savochkin.twitter.domain.UserRepository;
 
@@ -17,5 +17,10 @@ public class UserHashMapRepository implements UserRepository {
             followers.add(userId);
             return followers;
         });
+    }
+
+    @Override
+    public void reset() {
+        followers = new HashMap<>();
     }
 }
