@@ -1,7 +1,5 @@
 package com.savochkin.twitter.domain;
 
-import org.springframework.stereotype.Component;
-
 import java.util.*;
 
 public class Twitter {
@@ -9,9 +7,9 @@ public class Twitter {
     private int timestamp = 0;
     public static final int MAX_TWEETS = 10;
     // We are storing own tweet of the user. This is the optimization - just so that
-    private FeedRepository ownTweetsRepository; //  = new TweetHashMapRepository(); // todo
-    private FeedRepository feedsRepository; // = new TweetHashMapRepository();
-    private UserRepository userRepository; // = new UserHashMapRepository();
+    private final FeedRepository ownTweetsRepository;
+    private final FeedRepository feedsRepository;
+    private final UserRepository userRepository;
     public Twitter(FeedRepository ownTweetsRepository, FeedRepository feedsRepository, UserRepository userRepository) {
         this.ownTweetsRepository = ownTweetsRepository;
         this.feedsRepository = feedsRepository;
@@ -29,7 +27,7 @@ public class Twitter {
 
     public List<Integer> getNewsFeed(int userId) {// O(1)
         return feedsRepository.getFeed(userId).getAll().stream()
-                .map(tweet -> tweet.id())
+                .map(Tweet::id)
                 .toList();
     }
 
