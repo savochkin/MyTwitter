@@ -12,11 +12,7 @@ public class UserHashMapRepository implements UserRepository {
 
     @Override
     public List<Integer> getFollowers(int userId) {
-        return followers.computeIfAbsent(userId, k -> {
-            List<Integer> followers = new ArrayList<>();
-            followers.add(userId);
-            return followers;
-        });
+        return followers.computeIfAbsent(userId, k -> new ArrayList<>());
     }
 
     @Override

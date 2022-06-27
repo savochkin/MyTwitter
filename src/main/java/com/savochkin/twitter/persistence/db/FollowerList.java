@@ -8,7 +8,6 @@ public class FollowerList extends ArrayList {
 
     public FollowerList(FollowerRepository followerRepository, int followeeId, List<Integer> followers) {
         super(followers);
-        super.add(followeeId);
         this.followerRepository = followerRepository;
         this.followeeId = followeeId;
     }
