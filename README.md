@@ -5,6 +5,8 @@ Robert J. Martin (Clean Arhitecture, section 21):
 
 So what does the architecture of your application scream? When you look at the top-level directory structure, and the source files in the highest-level package, do they scream “Health Care System,” or “Accounting System,” or “Inventory Management System”? Or do they scream “Rails,” or “Spring/Hibernate,” or “ASP”?"
 
+"If your system architecture is all about the use cases, and if you have kept your frameworks at arm’s length, then you should be able to unit-test all those use cases without any of the frameworks in place. You shouldn’t need the web server running to run your tests. You shouldn’t need the database connected to run your tests. Your Entity objects should be plain old objects that have no dependencies on frameworks or databases or other complications. Your use case objects should coordinate your Entity objects. Finally, all of them together should be testable in situ, without any of the complications of frameworks."
+
 This is intended to be a training to try to do naive implementation of twitter with the following in mind:
 1. Try a development approach when we implement business logic + its unit tests first and the rest follows.
 2. Try to implement the core business logic such that the business logic "screams" its purpose.
