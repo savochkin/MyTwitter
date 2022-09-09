@@ -1,18 +1,32 @@
 # MyTwitter
+Robert J. Martin (Clean Arhitecture, section 21): 
 
-Реализация наивного твиттера с целью:
-1. Опробовать подход, когда сначала реализую бизнес-логику и ее тесты, а уже потом все остальное.
-2. Попробовать сделать так, чтобы бизнес-логика была бы полностью свободна от зависимостей от технических фреймворков (Spring-а) и хранилища и UI. 
+"Suppose you were looking at the architecture of a library. You would likely see a grand entrance, an area for check-in/out clerks, reading areas, small conference rooms, and gallery after gallery capable of holding bookshelves for all the books in the library. That architecture would scream: “LIBRARY.”
 
-Что сделал:
-1. Попробовал реализовать сначала доменную логику твиттера так, чтобы она была максимально понятна и очевидна. Реализация логики учитывает предполагаемый профиль нагрузки - getNewsFeed выполняется очень часто (O(1)), postTweet - умеренно (O(F)), follow/unfollow - очень редко (O(1) - тк количество записей в ленте каждого пользователя ограничено). Сразу написал тесты бизнес-логики и полностью ее отладил.
-2. Затем реализовал способ хранения информации о подписках через БД.
-3. Затем реализовал REST-интерфейс.
+So what does the architecture of your application scream? When you look at the top-level directory structure, and the source files in the highest-level package, do they scream “Health Care System,” or “Accounting System,” or “Inventory Management System”? Or do they scream “Rails,” or “Spring/Hibernate,” or “ASP”?"
 
-Выводы и особенности реализации:
-1. Бизнес-логика собрана в одном пакете twitter.domain и не содержит никаких зависимостей ни от Spring Framework, ни от хранилища, ни от UI. Это сделано с помощью инверсии зависимостей (см. ниже) и того, что на уровне Spring Framework в бине Config по сути реализуется паттерн Factory.
-2. Логика хранения подписок собрана в пакете twitter.persistence и реализует интерфейс UserRepository. Таким образом, мы инвертируем зависимость и обеспечиваем то, что ни UI-логика, ни доменная логика не зависит от реализации хранения. Уровень хранения в БД реализован через Spring Data.
-3. UI-логика собрана в пакете twitter.web и зависит только от бизнес-логики и Spring MVC.
-4. Обратите внимание как реализовано добавление подписчиков - мы просто получаем список имеющихся подписчиков и добавляем в него нового. Для того, чтобы в случае с БД все это так же работало пришлось сделать свою реализацию FollowerList.
-5. Мне показалось, что такой способ реализации - сначала бизнес-логику, потом хранение и UI - оказался очень удобен, т.к. основная сложность сидит в реализации бизнес-логики, а не в UI или хранении. После того как я реализовал и протестировал бизнес-логику, добавить перситентность и UI оказалось очень просто.
+This is intended to be a training to try to do naive implementation of twitter with the following in mind:
+1. Try a development approach when we implement business logic + its unit tests first and the rest follows.
+2. Try to implement the core business logic such that the business logic "screams" its purpose.
+3. Assess how separation of business logic and the underlying technology may be achieved in practice and in what extent we should take it into account.
+(if we completely not taking into account the tech limitation than we may end up with implementation with poor performance, maintainability etc)
 
+Thinks to look at (suggested check points):
+- Business logic should be independent from all dependencies to technical frameworks (Spring, persistence, UI etc)
+- Business classes should not share packages 
+(not: org.company.controllers,  dto, model ... with all classes mixed in those tech packages, but: com.company.domain (for business logic), ui (for UI), persistence (for persistence)
+- Interfaces (UI, persistence...) should be pluggable as much as possible
+
+My try #1
+1. Tried to implement twitter's logic first and made it as much more clear as possible. The objects should be as close to the vocabulary we use: Feed, User, etc.
+2. Took into account the traffic load as: getNewsFeed is very often (O(1)), postTweet - moderate (O(F)), follow/unfollow - very rate (O(1) ). 
+3. Implemented unit tests of the business logic right from the beggining and made it work before implementing tech stuff.
+4. After that implemented the persistence.
+5. After that implemented the REST interface.
+
+Conclusions:
+1. Business logic is in the twitter.domain package and has no dependecies from Spring Frameworkd, nor persisntence, nor UI. This is done via dependency inversion (see below) and because of the fact the Config bean in Spring Framework implements Factory pattern.
+2. Persistence logic is in twitter.persistence and immplements UserRepository interface. Thus, we invert the dependency and ensure that neither business logic, nor UI has dependecies on the persistence implementation.
+3. UI-logic is in twitter.web and depends only on business logic and Spring MVC.
+4. Attention: see the implementation of adding new subscribers - we obtain the list of current subscribers and simply add a new one (which is how it is most naturally it was implemented in business logic alone). In order to make it work with DB we needed to make our implementation of FollowerList.
+5. I found that this way working - implement business logic first and then persistence and UI - is very convenient as really the most difficulty lies (should lie) in the business logic. After I implementedd the business logic and had it unit tested - it would very easy to add persinstence and UI.
