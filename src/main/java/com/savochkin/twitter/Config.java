@@ -1,9 +1,9 @@
 package com.savochkin.twitter;
 
 import com.savochkin.twitter.persistence.db.UserDBRepository;
-import com.savochkin.twitter.persistence.hashmap.TweetHashMapRepository;
+import com.savochkin.twitter.persistence.inmemory.TweetHashMapRepository;
 import com.savochkin.twitter.domain.*;
-import com.savochkin.twitter.persistence.hashmap.UserHashMapRepository;
+import com.savochkin.twitter.persistence.inmemory.UserHashMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

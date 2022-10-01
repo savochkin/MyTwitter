@@ -1,4 +1,4 @@
-package com.savochkin.twitter.persistence.hashmap;
+package com.savochkin.twitter.persistence.inmemory;
 
 import com.savochkin.twitter.domain.UserRepository;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserHashMapRepository implements UserRepository {
-    private Map<Integer, List<Integer>> followers = new HashMap();
+    private Map<Integer, List<Integer>> followers = new HashMap<>();
 
     @Override
     public List<Integer> getFollowers(int userId) {

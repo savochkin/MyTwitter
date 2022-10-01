@@ -1,4 +1,4 @@
-package com.savochkin.twitter.persistence.hashmap;
+package com.savochkin.twitter.persistence.inmemory;
 
 import com.savochkin.twitter.domain.Feed;
 import com.savochkin.twitter.domain.Tweet;
@@ -13,7 +13,7 @@ public class TweetHashMapRepository implements FeedRepository {
 
     @Override
     public Feed<Tweet> getFeed(int userId) {
-        return tweets.computeIfAbsent(userId, k -> new Feed<Tweet>(Twitter.MAX_TWEETS, (t1, t2) -> t2.time() - t1.time()));
+        return tweets.computeIfAbsent(userId, k -> new Feed<>(Twitter.MAX_TWEETS, (t1, t2) -> t2.time() - t1.time()));
     }
 
     @Override
